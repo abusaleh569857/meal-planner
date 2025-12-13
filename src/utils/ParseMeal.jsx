@@ -1,7 +1,7 @@
 const ParseMeal = (recipeData) => {
   const id = recipeData.idMeal;
   const name = recipeData.strMeal;
-  const category = recipeData.strcategory;
+  const category = recipeData.strCategory;
   const area = recipeData.strArea;
   const thumb = recipeData.strMealThumb;
   const video = recipeData.strYoutube;
@@ -18,9 +18,6 @@ const ParseMeal = (recipeData) => {
     }
   }
 
-  ingredients.map((ingredient) => {
-    console.log("ing :", ingredient);
-  });
 
   return {
     id,

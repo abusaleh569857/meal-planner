@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const CACHE_KEY = "mealdb_categories_v1";
+const CACHE_KEY = "mealdb_categories";
 
 const useCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -17,14 +17,14 @@ const useCategory = () => {
           const parsed = JSON.parse(cached);
           if (isMounted) {
             setCategories(parsed);
-            setLoading(false); 
+            setLoading(false);
           }
         }
 
-       
         const res = await fetch(
           "https://www.themealdb.com/api/json/v1/1/categories.php"
         );
+        if (!res.ok) throw new Error("Error : Could Not Fetch Category Data!");
         const data = await res.json();
         const list =
           data.categories?.map((cat) => ({
