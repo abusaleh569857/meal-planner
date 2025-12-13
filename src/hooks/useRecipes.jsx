@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ParseMeal from "../utils/ParseMeal";
 
 const useRecipes = (searchQuery, category) => {
   const [recipe, setRecipe] = useState([]);
@@ -16,7 +17,13 @@ const useRecipes = (searchQuery, category) => {
             )}`
           );
           const data = await res.json();
-          console.log("Data :", data.meals);
+          if (isMounted) {
+            const allRecipe = data?.meals || [];
+            const recipeData = allRecipe.map(ParseMeal);
+            setRecipe(recipeData);
+            setLoading(false);
+          }
+          //console.log("Data :", data.meals);
         } catch (error) {}
       }
     };
