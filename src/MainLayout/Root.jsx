@@ -3,7 +3,7 @@ import Footer from "../pages/Footer";
 
 const Root = () => {
   return (
-    <div>
+    <div className="m-5">
       <Outlet />
       <Footer />
     </div>
