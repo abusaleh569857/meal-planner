@@ -10,7 +10,7 @@ const Category = () => {
       ) : error ? (
         <div>{error}</div>
       ) : (
-        <div className="grid grid-cols-4 gap-3 m-5">
+        <div className="grid grid-cols-4 gap-3">
           {categories.map((cat) => (
             <CategoryCard key={cat.id} cat={cat}></CategoryCard>
           ))}
