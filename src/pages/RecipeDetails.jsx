@@ -3,11 +3,38 @@ import useRecipeDetails from "../hooks/useRecipeDetails";
 
 const RecipeDetails = () => {
   const { id } = useParams();
-  const { recipeDetails } = useRecipeDetails(id);
+  const { recipeDetails, loading } = useRecipeDetails(id);
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  const { name, area, category, thumb, ingredients, instruction, video } =
+    recipeDetails;
+  console.log("recipe :", recipeDetails);
+
   return (
     <div>
-      <h1>Id : {id}</h1>
-      <h1>{recipeDetails.name}</h1>
+      <div>
+        <h1>Id : {id}</h1>
+        <h1>{name}</h1>
+        <h1>Category : {category}</h1>
+        <h1>Area : {area}</h1>
+        <p>Instruction : {instruction}</p>
+        <div>
+          <img src={thumb} alt="thumb" className="w-[350px]" />
+        </div>
+        {ingredients.map((ing, idx) => (
+          <div key={idx} className="flex justify-center items-center gap-3">
+            <h1>Ingredient Name : {ing.name}</h1>
+            <h1>Ingredient Measure : {ing.measure}</h1>
+          </div>
+        ))}
+        <button
+          type="submit"
+          className=" w-full text-md py-3 px-5 bg-orange-400 font-medium hover:bg-orange-500 transition duration-300 ease-in-out"
+        >
+          Add to Meal
+        </button>
+      </div>
     </div>
   );
 };
