@@ -16,8 +16,8 @@ const HomePage = () => {
   useEffect(() => {
     if (!loading && recipes.length === 0 && search && category) {
       Swal.fire({
-        title: "Oops! 😅",
-        text: "Your search and category don’t match. Make them the same, or no meals will show up! 😤",
+        title: "Oops! ",
+        text: "Your search and category don’t match. Make them the same, or no meals will show up! ",
         icon: "warning",
         confirmButtonText: "Got it!",
         background: "#fff3cd",
