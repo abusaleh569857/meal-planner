@@ -10,8 +10,9 @@ const initialState = {
     thurs: [],
     fri: [],
   },
+  loading: false,
+  error: null,
 };
-
 const mealPlanReducer = (state, action) => {
   switch (action.type) {
     case "ADD_MEAL":
@@ -22,7 +23,6 @@ const mealPlanReducer = (state, action) => {
           [action.payload.day]: [
             ...state.mealPlan[action.payload.day],
             action.payload.meal,
-            action.payload.recipe,
           ],
         },
       };
@@ -48,6 +48,16 @@ const mealPlanReducer = (state, action) => {
       return {
         ...state,
         mealPlan: initialState.mealPlan,
+      };
+    case "SET_LOADING":
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case "SET_ERROR":
+      return {
+        ...state,
+        loading: action.payload,
       };
 
     default:
