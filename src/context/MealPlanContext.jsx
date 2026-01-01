@@ -57,7 +57,7 @@ const mealPlanReducer = (state, action) => {
     case "SET_ERROR":
       return {
         ...state,
-        loading: action.payload,
+        error: action.payload,
       };
 
     default:
