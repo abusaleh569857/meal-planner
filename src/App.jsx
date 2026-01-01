@@ -1,10 +1,13 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./route/Route";
+import { MealPlanProvider } from "./context/MealPlanContext";
 
 function App() {
   return (
     <>
-      <RouterProvider router={router}></RouterProvider>
+      <MealPlanProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </MealPlanProvider>
     </>
   );
 }
