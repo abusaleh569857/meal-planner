@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer } from "react";
-import { createContext, useReducer } from "react";
 
 const initialState = {
   mealPlan: {
@@ -73,6 +72,4 @@ export const useMealPlan = () => {
     throw new Error("useMealPlan must be used within MealPlanProvider");
   }
   return context;
-const MealPlanProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(mealPlanReducer, initialState);
 };
