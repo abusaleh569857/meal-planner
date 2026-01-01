@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 import useRecipeDetails from "../hooks/useRecipeDetails";
+import { useState } from "react";
+import MealPlanModal from "../components/MealPlanModal";
 
 const RecipeDetails = () => {
+  const [open, setOpen] = useState(false);
   const { id } = useParams();
   const { recipeDetails, loading } = useRecipeDetails(id);
   if (loading) {
@@ -31,9 +34,15 @@ const RecipeDetails = () => {
         <button
           type="submit"
           className=" w-full text-md py-3 px-5 bg-orange-400 font-medium hover:bg-orange-500 transition duration-300 ease-in-out"
+          onClick={() => setOpen(true)}
         >
           Add to Meal
         </button>
+        {open && (
+          <div>
+            <MealPlanModal recipeDetails={recipeDetails}></MealPlanModal>
+          </div>
+        )}
       </div>
     </div>
   );
