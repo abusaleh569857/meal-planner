@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 const initialState = {
   mealPlan: {
@@ -22,6 +23,7 @@ const mealPlanReducer = (state, action) => {
           [action.payload.day]: [
             ...state.mealPlan[action.payload.day],
             action.payload.meal,
+            action.payload.recipe,
           ],
         },
       };
@@ -71,4 +73,6 @@ export const useMealPlan = () => {
     throw new Error("useMealPlan must be used within MealPlanProvider");
   }
   return context;
+const MealPlanProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(mealPlanReducer, initialState);
 };
