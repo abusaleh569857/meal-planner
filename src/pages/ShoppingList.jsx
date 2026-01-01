@@ -2,23 +2,37 @@ import { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import { useMealPlan } from "../hooks/useMealPlan";
 
+const SHOPPING_KEY = "shopping_list_v1";
+
 const ShoppingList = () => {
   const { state, dispatch } = useMealPlan();
   const { mealPlan, loading, error } = state;
-
   const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(SHOPPING_KEY);
+    if (stored) {
+      setItems(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      localStorage.setItem(SHOPPING_KEY, JSON.stringify(items));
+    }
+  }, [items]);
 
   const recipeIds = useMemo(() => {
     const ids = Object.values(mealPlan)
       .flat()
       .map((meal) => meal.id);
-
     return [...new Set(ids)];
   }, [mealPlan]);
 
   useEffect(() => {
     if (recipeIds.length === 0) {
       setItems([]);
+      localStorage.removeItem(SHOPPING_KEY);
       return;
     }
 
@@ -54,7 +68,7 @@ const ShoppingList = () => {
         });
 
         setItems(Object.values(ingredientMap));
-      } catch (err) {
+      } catch {
         dispatch({
           type: "SET_ERROR",
           payload: "Failed to generate shopping list",
@@ -86,24 +100,12 @@ const ShoppingList = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setItems((prev) => prev.filter((item) => !item.purchased));
-
-        Swal.fire({
-          icon: "success",
-          title: "Cleared!",
-          timer: 1500,
-          showConfirmButton: false,
-        });
       }
     });
   };
 
-  if (loading) {
-    return <p className="p-4">Generating shopping list...</p>;
-  }
-
-  if (error) {
-    return <p className="p-4 text-red-500">{error}</p>;
-  }
+  if (loading) return <p className="p-4">Generating shopping list...</p>;
+  if (error) return <p className="p-4 text-red-500">{error}</p>;
 
   return (
     <div className="max-w-xl mx-auto p-4">
@@ -134,7 +136,7 @@ const ShoppingList = () => {
             ))}
           </ul>
 
-          {items.some((item) => item.purchased) && (
+          {items.some((i) => i.purchased) && (
             <button
               onClick={clearPurchased}
               className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
