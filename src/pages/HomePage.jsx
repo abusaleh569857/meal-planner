@@ -36,7 +36,7 @@ const HomePage = () => {
       ></SearchBar>
 
       <RecipeList recipes={recipes}></RecipeList>
-      <Category></Category>
+      {/* <Category></Category> */}
     </div>
   );
 };

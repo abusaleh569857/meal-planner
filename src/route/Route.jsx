@@ -3,6 +3,7 @@ import Root from "../MainLayout/Root";
 import ErrorPage from "../pages/ErrorPage";
 import HomePage from "../pages/HomePage";
 import RecipeDetails from "../pages/RecipeDetails";
+import WeeklyMealPlan from "../pages/WeeklymealPlan";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/meal-plan",
+        element: <WeeklyMealPlan />,
       },
       {
         path: "/recipe-details/:id",

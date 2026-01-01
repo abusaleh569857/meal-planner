@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { useMealPlan } from "../context/MealPlanContext";
+import { useMealPlan } from "../hooks/useMealPlan";
 
 const MealPlanModal = ({ recipeDetails }) => {
   const meal = recipeDetails;

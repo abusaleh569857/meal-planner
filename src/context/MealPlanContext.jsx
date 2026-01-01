@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 const initialState = {
   mealPlan: {
@@ -47,7 +47,7 @@ const mealPlanReducer = (state, action) => {
     case "CLEAR_WEEK":
       return {
         ...state,
-        mealPlan: initialState.mealPlan,
+        mealPlan: { ...initialState.mealPlan },
       };
     case "SET_LOADING":
       return {
@@ -74,12 +74,4 @@ export const MealPlanProvider = ({ children }) => {
       {children}
     </MealPlanContext.Provider>
   );
-};
-
-export const useMealPlan = () => {
-  const context = useContext(MealPlanContext);
-  if (!context) {
-    throw new Error("useMealPlan must be used within MealPlanProvider");
-  }
-  return context;
 };
