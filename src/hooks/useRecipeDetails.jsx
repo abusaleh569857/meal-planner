@@ -17,7 +17,7 @@ const useRecipeDetails = (id) => {
 
       try {
         const res = await fetch(
-          `https://api.allorigins.win/raw?url=https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
         );
 
         if (!res.ok) throw new Error("Could not fetch recipe details!");
