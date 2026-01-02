@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
-import Category from "../components/Category";
 import SearchBar from "../components/SearchBar";
-import useCategory from "../hooks/useCategory";
 import useRecipes from "../hooks/useRecipes";
 import RecipeList from "../components/RecipeList";
 import Swal from "sweetalert2";
 
 const HomePage = () => {
-  //   const { categories, loading, error } = useCategory();
-
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const { recipes, loading, error } = useRecipes(search, category);
@@ -36,7 +32,6 @@ const HomePage = () => {
       ></SearchBar>
 
       <RecipeList recipes={recipes}></RecipeList>
-      {/* <Category></Category> */}
     </div>
   );
 };
