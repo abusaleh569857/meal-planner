@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import { useMealPlan } from "../hooks/useMealPlan";
+import ParseMeal from "../utils/ParseMeal";
 
 const SHOPPING_KEY = "shopping_list_v1";
+const BLOCKED_KEY = "shopping_blocked_v1";
 
 const ShoppingList = () => {
   const { state, dispatch } = useMealPlan();
@@ -17,9 +19,7 @@ const ShoppingList = () => {
   }, []);
 
   useEffect(() => {
-    if (items.length > 0) {
-      localStorage.setItem(SHOPPING_KEY, JSON.stringify(items));
-    }
+    localStorage.setItem(SHOPPING_KEY, JSON.stringify(items));
   }, [items]);
 
   const recipeIds = useMemo(() => {
@@ -41,26 +41,35 @@ const ShoppingList = () => {
       dispatch({ type: "SET_ERROR", payload: null });
 
       try {
+        const blockedRaw = localStorage.getItem(BLOCKED_KEY);
+        const blockedSet = new Set(blockedRaw ? JSON.parse(blockedRaw) : []);
+
+        const stored = localStorage.getItem(SHOPPING_KEY);
+        const storedItems = stored ? JSON.parse(stored) : [];
+
+        const purchasedMap = storedItems.reduce((acc, item) => {
+          acc[item.name] = item.purchased;
+          return acc;
+        }, {});
+
         const requests = recipeIds.map((id) =>
-          fetch(
-            `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-          ).then((res) => res.json())
+          fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+            .then((res) => res.json())
+            .then((data) => ParseMeal(data.meals[0]))
         );
 
-        const responses = await Promise.all(requests);
-
+        const recipes = await Promise.all(requests);
         const ingredientMap = {};
 
-        responses.forEach((res) => {
-          const recipe = res.meals?.[0];
-          if (!recipe) return;
-
+        recipes.forEach((recipe) => {
           recipe.ingredients.forEach(({ name, measure }) => {
+            if (blockedSet.has(name)) return;
+
             if (!ingredientMap[name]) {
               ingredientMap[name] = {
                 name,
                 measures: [],
-                purchased: false,
+                purchased: purchasedMap[name] || false,
               };
             }
             ingredientMap[name].measures.push(measure);
@@ -94,13 +103,23 @@ const ShoppingList = () => {
       title: "Clear purchased items?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dc2626",
-      cancelButtonColor: "#6b7280",
       confirmButtonText: "Yes, clear",
     }).then((result) => {
-      if (result.isConfirmed) {
-        setItems((prev) => prev.filter((item) => !item.purchased));
-      }
+      if (!result.isConfirmed) return;
+
+      setItems((prev) => {
+        const purchasedNames = prev
+          .filter((i) => i.purchased)
+          .map((i) => i.name);
+
+        const existing = JSON.parse(localStorage.getItem(BLOCKED_KEY)) || [];
+
+        const updated = Array.from(new Set([...existing, ...purchasedNames]));
+
+        localStorage.setItem(BLOCKED_KEY, JSON.stringify(updated));
+
+        return prev.filter((item) => !item.purchased);
+      });
     });
   };
 
@@ -117,21 +136,17 @@ const ShoppingList = () => {
         <>
           <ul className="space-y-2">
             {items.map((item) => (
-              <li key={item.name} className="flex justify-between items-center">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={item.purchased}
-                    onChange={() => togglePurchased(item.name)}
-                  />
-                  <span
-                    className={
-                      item.purchased ? "line-through text-gray-400" : ""
-                    }
-                  >
-                    {item.name} ({item.measures.join(", ")})
-                  </span>
-                </label>
+              <li key={item.name} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={item.purchased}
+                  onChange={() => togglePurchased(item.name)}
+                />
+                <span
+                  className={item.purchased ? "line-through text-gray-400" : ""}
+                >
+                  {item.name} ({item.measures.join(", ")})
+                </span>
               </li>
             ))}
           </ul>
