@@ -1,37 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import useRecipes from "../hooks/useRecipes";
 import RecipeList from "../components/RecipeList";
-import Swal from "sweetalert2";
+import DataHandler from "../components/DataHandler";
 
 const HomePage = () => {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("All");
   const { recipes, loading, error } = useRecipes(search, category);
 
-  useEffect(() => {
-    if (!loading && recipes.length === 0 && search && category) {
-      Swal.fire({
-        title: "Oops! ",
-        text: "Your search and category don’t match. Make them the same, or no meals will show up! ",
-        icon: "warning",
-        confirmButtonText: "Got it!",
-        background: "#fff3cd",
-        color: "#856404",
-      });
-    }
-  }, [loading, recipes, search, category]);
+  const handleReset = () => {
+    setSearch("");
+    setCategory("All");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <SearchBar
         search={search}
         setSearch={setSearch}
         category={category}
         setCategory={setCategory}
-      ></SearchBar>
+        loading={loading}
+      />
 
-      <RecipeList recipes={recipes}></RecipeList>
+      <DataHandler
+        loading={loading}
+        error={error}
+        data={recipes}
+        search={search}
+        category={category}
+        onReset={handleReset}
+      >
+        <RecipeList recipes={recipes} />
+      </DataHandler>
     </div>
   );
 };

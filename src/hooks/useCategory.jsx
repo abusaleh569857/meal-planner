@@ -13,18 +13,22 @@ const useCategory = () => {
     const fetchAllCategory = async () => {
       try {
         const cached = localStorage.getItem(CACHE_KEY);
+
         if (cached) {
           const parsed = JSON.parse(cached);
           if (isMounted) {
             setCategories(parsed);
             setLoading(false);
           }
+          return;
         }
 
         const res = await fetch(
-          "https://www.themealdb.com/api/json/v1/1/categories.php"
+          "https://api.allorigins.win/raw?url=https://www.themealdb.com/api/json/v1/1/categories.php"
         );
+
         if (!res.ok) throw new Error("Error : Could Not Fetch Category Data!");
+
         const data = await res.json();
         const list =
           data.categories?.map((cat) => ({

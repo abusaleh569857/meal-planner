@@ -6,42 +6,51 @@ const useRecipeDetails = (id) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log("details:", Array.isArray(recipeDetails));
-  console.log("details:", recipeDetails);
-  console.log("id :", id);
-
   useEffect(() => {
+    if (!id) return;
+
     let isMounted = true;
+
     const fetchRecipeDetails = async () => {
-      console.log("id :", id);
-      if (id) {
-        try {
-          const res = await fetch(
-            `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-          );
-          const data = await res.json();
-          const recipeDetailsData = data?.meals?.[0] || {};
-          const parsedData = recipeDetailsData
-            ? ParseMeal(recipeDetailsData)
-            : {};
-          console.log("data", parsedData);
+      setLoading(true);
+      setError(null);
+
+      try {
+        const res = await fetch(
+          `https://api.allorigins.win/raw?url=https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+        );
+
+        if (!res.ok) throw new Error("Could not fetch recipe details!");
+
+        const data = await res.json();
+        const recipeDetailsData = data?.meals?.[0] || null;
+
+        if (recipeDetailsData) {
+          const parsedData = ParseMeal(recipeDetailsData);
           if (isMounted) {
             setRecipedetails(parsedData);
-            setLoading(false);
           }
-        } catch (e) {
-          if (isMounted) {
-            setError(e.message);
-            setLoading(false);
-          }
+        } else {
+          throw new Error("Recipe details not found!");
+        }
+      } catch (e) {
+        if (isMounted) {
+          setError(e.message);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
         }
       }
     };
+
     fetchRecipeDetails();
+
     return () => {
       isMounted = false;
     };
   }, [id]);
+
   return {
     recipeDetails,
     loading,
