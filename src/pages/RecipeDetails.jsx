@@ -148,7 +148,7 @@ const RecipeDetails = () => {
                           return (
                             <p
                               key={idx}
-                              className="text-gray-600 text-lg leading-relaxed text-justify mb-2 p-3 rounded-xl transition-all duration-300 hover:bg-orange-50 hover:text-gray-900 hover:shadow-sm border border-transparent hover:border-orange-100"
+                              className="text-gray-600 text-lg leading-relaxed text-justify mb-2 p-3 rounded-xl transition-all duration-300 bg-orange-50 hover:bg-orange-100 hover:text-gray-900 hover:shadow-sm border border-transparent hover:border-orange-200"
                             >
                               {line}
                             </p>
