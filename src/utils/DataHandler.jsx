@@ -1,4 +1,4 @@
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { FaSearchMinus, FaExclamationTriangle } from "react-icons/fa";
 
 const DataHandler = ({
@@ -6,16 +6,14 @@ const DataHandler = ({
   error,
   data = [],
   children,
-  onReset, // রিসেট ফাংশন (Parent থেকে আসবে)
-  search, // সার্চ টেক্সট দেখানোর জন্য
-  category, // ক্যাটাগরি টেক্সট দেখানোর জন্য
+  onReset,
+  search,
+  category,
 }) => {
-  // ১. লোডিং অবস্থা
   if (loading) {
     return <LoadingSpinner />;
   }
 
-  // ২. এরর অবস্থা
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center text-red-500 min-h-[300px]">
@@ -36,7 +34,6 @@ const DataHandler = ({
     );
   }
 
-  // ৩. ডাটা নেই (Empty State - আপনার দেওয়া ডিজাইন অনুযায়ী)
   if (!loading && !error && data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center px-4 min-h-[300px]">
@@ -52,7 +49,7 @@ const DataHandler = ({
           ". Try browsing all categories or check your spelling.
         </p>
         <button
-          onClick={onReset} // প্যারেন্ট থেকে আসা রিসেট ফাংশন কল হবে
+          onClick={onReset}
           className="mt-6 px-6 py-2 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors shadow-lg transform active:scale-95"
         >
           Reset Filters
@@ -61,7 +58,6 @@ const DataHandler = ({
     );
   }
 
-  // ৪. সব ঠিক থাকলে মেইন কন্টেন্ট দেখাও
   return <>{children}</>;
 };
 

@@ -1,9 +1,16 @@
 import Swal from "sweetalert2";
 import { useMealPlan } from "../hooks/useMealPlan";
-import { FaTimes, FaCalendarAlt, FaUtensils } from "react-icons/fa";
+import {
+  FaTimes,
+  FaCalendarAlt,
+  FaUtensils,
+  FaArrowRight,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const MealPlanModal = ({ recipeDetails, setOpen }) => {
   const meal = recipeDetails;
+  const navigate = useNavigate();
 
   const daysObj = [
     { key: "mon", label: "Monday" },
@@ -59,6 +66,11 @@ const MealPlanModal = ({ recipeDetails, setOpen }) => {
     });
   };
 
+  const goToMealPlanner = () => {
+    setOpen(false);
+    navigate("/meal-plan");
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative transform transition-all scale-100 animate-fade-in-up max-h-[90vh] overflow-y-auto">
@@ -101,9 +113,19 @@ const MealPlanModal = ({ recipeDetails, setOpen }) => {
         </div>
 
         <div className="p-6 md:p-8 bg-gray-50/30">
-          <h3 className="text-lg font-bold text-gray-700 mb-5 flex items-center gap-2">
-            <FaUtensils className="text-gray-400" /> Choose a Day:
-          </h3>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-gray-700 flex items-center gap-2">
+              <FaUtensils className="text-gray-400" /> Choose a Day:
+            </h3>
+
+            <button
+              onClick={goToMealPlanner}
+              className="flex items-center gap-2 bg-linear-to-r from-orange-500 to-red-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group"
+            >
+              View Full Plan
+              <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
             {daysObj.map((dayItem) => {
