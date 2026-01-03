@@ -24,7 +24,7 @@ const useCategory = () => {
         }
 
         const res = await fetch(
-          "https://api.allorigins.win/raw?url=https://www.themealdb.com/api/json/v1/1/categories.php"
+          "https://www.themealdb.com/api/json/v1/1/categories.php"
         );
 
         if (!res.ok) throw new Error("Error : Could Not Fetch Category Data!");
