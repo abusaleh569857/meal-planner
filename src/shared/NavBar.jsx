@@ -1,12 +1,32 @@
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaUtensils,
   FaHome,
   FaCalendarAlt,
   FaShoppingCart,
+  FaBars,
+  FaTimes,
+  FaSignInAlt,
+  FaUserPlus,
 } from "react-icons/fa";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const navLinks = [
     { name: "Home", path: "/", icon: <FaHome /> },
     { name: "Meal Plan", path: "/meal-plan", icon: <FaCalendarAlt /> },
@@ -21,8 +41,8 @@ const Navbar = () => {
             <div className="bg-linear-to-tr from-orange-500 to-red-500 text-white p-2 rounded-xl shadow-lg transform group-hover:rotate-12 transition-all duration-300">
               <FaUtensils className="text-xl" />
             </div>
-            <span className="text-2xl font-extrabold bg-linear-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent tracking-tight">
-              Crave<span className="text-orange-500">Hub</span>
+            <span className="text-2xl md:text-3xl font-extrabold bg-linear-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent tracking-tight">
+              Foodie<span className="text-orange-500">Zone</span>
             </span>
           </NavLink>
 
@@ -56,7 +76,47 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className="md:hidden text-gray-600">Menu</div>
+          <div className="md:hidden" ref={menuRef}>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-600 hover:text-orange-500 text-2xl focus:outline-none transition-colors p-2"
+            >
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </button>
+
+            {isOpen && (
+              <div className="absolute top-16 right-4 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-200 origin-top-right animate-fade-in-down">
+                <div className="p-2 space-y-1">
+                  {navLinks.map((link) => (
+                    <NavLink
+                      key={link.name}
+                      to={link.path}
+                      onClick={() => setIsOpen(false)}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                          isActive
+                            ? "bg-orange-50 text-orange-600"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        }`
+                      }
+                    >
+                      <span className="text-lg">{link.icon}</span>
+                      <span>{link.name}</span>
+                    </NavLink>
+                  ))}
+
+                  <div className="border-t border-gray-100 my-2 pt-2 space-y-2">
+                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors text-left">
+                      <FaSignInAlt className="text-gray-400" /> Log In
+                    </button>
+                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-linear-to-r from-gray-900 to-gray-800 hover:from-orange-600 hover:to-orange-500 shadow-md transition-all text-left">
+                      <FaUserPlus /> Sign Up
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

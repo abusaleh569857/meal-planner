@@ -19,6 +19,10 @@ const ShoppingList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const recipeIds = useMemo(() => {
     const ids = Object.values(mealPlan)
       .flat()
