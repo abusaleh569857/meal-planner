@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useRecipeDetails from "../hooks/useRecipeDetails";
 import MealPlanModal from "../components/MealPlanModal";
@@ -15,6 +15,10 @@ const RecipeDetails = () => {
   const navigate = useNavigate();
   const { recipeDetails, loading, error } = useRecipeDetails(id);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const getYoutubeId = (url) => {
     if (!url) return null;
@@ -128,7 +132,7 @@ const RecipeDetails = () => {
                     Cooking Instructions
                   </h2>
 
-                  <div className="space-y-4">
+                  <div>
                     {instructionsList.length > 0 ? (
                       instructionsList.map((line, idx) => {
                         const isHeader = /^(step\s*\d+|^\d+\.?)\s*$/i.test(
@@ -139,7 +143,7 @@ const RecipeDetails = () => {
                           return (
                             <h3
                               key={idx}
-                              className="text-xl font-extrabold text-orange-600 mt-8 mb-3 uppercase tracking-wider border-b-2 border-orange-100 pb-1 inline-block transform transition-all duration-300 hover:translate-x-2 hover:text-orange-700 hover:border-orange-400 cursor-default"
+                              className="text-xl font-extrabold text-orange-600 mt-3 mb-3 uppercase tracking-wider border-b-2 border-orange-100 pb-1 inline-block transform transition-all duration-300 hover:translate-x-2 hover:text-orange-700 hover:border-orange-400 cursor-default"
                             >
                               {line}
                             </h3>

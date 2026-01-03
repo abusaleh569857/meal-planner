@@ -56,7 +56,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 mt-20 border-t-4 border-orange-500 relative overflow-hidden">
+    <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 mt-2 md:mt-15 border-t-4 border-orange-500 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1" />
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">

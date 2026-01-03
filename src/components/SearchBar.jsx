@@ -37,7 +37,7 @@ const SearchBar = ({ search, setSearch, category, setCategory }) => {
 
   return (
     <div className="w-full pb-20">
-      <div className="relative w-full h-[450px] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+      <div className="relative w-full h-[350px] md:h-[450px] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 hover:scale-105"
           style={{
@@ -52,27 +52,27 @@ const SearchBar = ({ search, setSearch, category, setCategory }) => {
             <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">
               Smart Meal <span className="text-orange-400">Planner</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 font-medium drop-shadow-md max-w-2xl mx-auto">
+            <p className="text-md md:text-xl pt-1 text-gray-200 font-medium drop-shadow-md max-w-2xl mx-auto">
               Find the perfect recipe for your next meal.
             </p>
           </div>
 
           <form
             onSubmit={setSearchResult}
-            className="flex items-center bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-2xl w-full max-w-2xl mx-auto transform transition-all hover:scale-[1.01]"
+            className="flex items-center bg-white/95 backdrop-blur-sm rounded-full p-1 md:p-2 shadow-2xl w-full max-w-2xl mx-auto transform transition-all hover:scale-[1.01]"
           >
             <input
               type="search"
               placeholder="What do you want to cook today?"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="flex-1 bg-transparent px-6 py-3 text-gray-800 placeholder-gray-500 focus:outline-none text-lg font-medium rounded-l-full"
+              className="flex-1 bg-transparent px-4 py-2 md:px-6 md:py-3 text-gray-800 placeholder-gray-500 focus:outline-none text-base md:text-lg font-medium rounded-l-full min-w-0"
             />
             <button
               type="submit"
-              className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all duration-300 flex items-center gap-2 transform active:scale-95"
+              className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-5 py-2 md:px-8 md:py-3 rounded-full font-bold shadow-lg transition-all duration-300 flex items-center gap-2 transform active:scale-95 text-sm md:text-base shrink-0"
             >
-              <FaSearch className="text-lg" />
+              <FaSearch className="text-sm md:text-lg" />
               <span>Search</span>
             </button>
           </form>

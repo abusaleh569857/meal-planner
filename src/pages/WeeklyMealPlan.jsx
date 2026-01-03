@@ -6,10 +6,15 @@ import {
   FaUtensils,
   FaTimesCircle,
 } from "react-icons/fa";
+import { useEffect } from "react";
 
 const WeeklyMealPlan = () => {
   const { state, dispatch } = useMealPlan();
   const { mealPlan } = state;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleClearWeek = () => {
     Swal.fire({
@@ -110,17 +115,17 @@ const WeeklyMealPlan = () => {
   const hasMeals = Object.values(mealPlan).some((meals) => meals.length > 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gray-50/50">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-        <div className="flex items-center gap-4">
-          <div className="bg-orange-100 p-3 rounded-full text-orange-600">
-            <FaCalendarWeek className="text-2xl" />
+    <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 min-h-screen bg-gray-50/50">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-5 bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div className="flex items-center gap-3 md:gap-4">
+          <div className="bg-orange-100 p-2.5 md:p-3 mt-2 rounded-full text-orange-600 shrink-0">
+            <FaCalendarWeek className="text-2xl md:text-3xl" />
           </div>
           <div>
-            <h2 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 tracking-tight leading-tight">
               Weekly Meal Plan
             </h2>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-xs md:text-sm mt-0.5">
               Organize your nutrition for the week ahead.
             </p>
           </div>
@@ -129,7 +134,7 @@ const WeeklyMealPlan = () => {
         {hasMeals && (
           <button
             onClick={handleClearWeek}
-            className="group flex items-center gap-2 bg-red-50 text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-red-200"
+            className="w-full md:w-auto group flex items-center justify-center gap-2 bg-red-50 text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-red-200 text-sm md:text-base"
           >
             <FaTrash className="text-sm group-hover:animate-bounce" />
             Clear Entire Week
@@ -137,7 +142,7 @@ const WeeklyMealPlan = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {Object.entries(mealPlan).map(([day, meals]) => (
           <div
             key={day}
@@ -148,7 +153,7 @@ const WeeklyMealPlan = () => {
             }`}
           >
             <div
-              className={`p-5 flex justify-between items-center border-b ${
+              className={`p-4 md:p-5 flex justify-between items-center border-b ${
                 meals.length > 0
                   ? "border-orange-50 bg-orange-50/50"
                   : "border-gray-200"
@@ -156,11 +161,11 @@ const WeeklyMealPlan = () => {
             >
               <div className="flex items-center gap-2">
                 <span
-                  className={`w-2 h-8 rounded-full ${
+                  className={`w-1.5 md:w-2 h-6 md:h-8 rounded-full ${
                     meals.length > 0 ? "bg-orange-500" : "bg-gray-300"
                   }`}
                 ></span>
-                <strong className="text-lg font-black text-gray-700 uppercase tracking-wider">
+                <strong className="text-base md:text-lg font-black text-gray-700 uppercase tracking-wider">
                   {day}
                 </strong>
               </div>
@@ -168,7 +173,7 @@ const WeeklyMealPlan = () => {
               {meals.length > 0 && (
                 <button
                   onClick={() => handleClearDay(day)}
-                  className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all"
+                  className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all touch-manipulation"
                   title="Clear Day"
                 >
                   <FaTimesCircle className="text-lg" />
@@ -176,14 +181,16 @@ const WeeklyMealPlan = () => {
               )}
             </div>
 
-            <div className="p-4 flex-1">
+            <div className="p-3 md:p-4 flex-1">
               {meals.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-gray-400 py-8 gap-2">
-                  <FaUtensils className="text-2xl opacity-20" />
-                  <span className="text-sm font-medium">No meals planned</span>
+                <div className="h-full flex flex-col items-center justify-center text-gray-400 py-6 md:py-8 gap-2">
+                  <FaUtensils className="text-xl md:text-2xl opacity-20" />
+                  <span className="text-xs md:text-sm font-medium">
+                    No meals planned
+                  </span>
                 </div>
               ) : (
-                <ul className="space-y-3">
+                <ul className="space-y-2 md:space-y-3">
                   {meals.map((meal) => (
                     <li
                       key={meal.id}
@@ -192,14 +199,14 @@ const WeeklyMealPlan = () => {
                       <img
                         src={meal.thumb}
                         alt={meal.name}
-                        className="w-12 h-12 rounded-lg object-cover shadow-sm group-hover/item:scale-105 transition-transform"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shadow-sm group-hover/item:scale-105 transition-transform shrink-0"
                       />
 
-                      <div className="flex-1 min-w-0 pr-6">
-                        <p className="font-bold text-gray-800 text-sm truncate">
+                      <div className="flex-1 min-w-0 pr-8 md:pr-6">
+                        <p className="font-bold text-gray-800 text-xs md:text-sm truncate leading-tight">
                           {meal.name}
                         </p>
-                        <p className="text-xs text-orange-500 font-semibold uppercase">
+                        <p className="text-[10px] md:text-xs text-orange-500 font-semibold uppercase mt-0.5">
                           {meal.category}
                         </p>
                       </div>
@@ -208,10 +215,10 @@ const WeeklyMealPlan = () => {
                         onClick={() =>
                           handleRemoveMeal(day, meal.id, meal.name)
                         }
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover/item:opacity-100 transition-all duration-200"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-gray-400 md:text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-100 md:opacity-0 md:group-hover/item:opacity-100 transition-all duration-200 touch-manipulation"
                         title="Remove Meal"
                       >
-                        <FaTrash className="text-sm" />
+                        <FaTrash className="text-xs md:text-sm" />
                       </button>
                     </li>
                   ))}
