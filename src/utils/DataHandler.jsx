@@ -1,4 +1,4 @@
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { FaSearchMinus, FaExclamationTriangle } from "react-icons/fa";
 
 const DataHandler = ({

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useRecipeDetails from "../hooks/useRecipeDetails";
 import MealPlanModal from "../components/MealPlanModal";
-import DataHandler from "../components/DataHandler";
+import DataHandler from "../utils/DataHandler";
 import {
   FaArrowLeft,
   FaUtensils,

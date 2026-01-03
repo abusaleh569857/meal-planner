@@ -2,7 +2,7 @@ import { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import useRecipes from "../hooks/useRecipes";
 import RecipeList from "../components/RecipeList";
-import DataHandler from "../components/DataHandler";
+import DataHandler from "../utils/DataHandler";
 
 const HomePage = () => {
   const [search, setSearch] = useState("");
