@@ -1,5 +1,11 @@
 import Swal from "sweetalert2";
 import { useMealPlan } from "../hooks/useMealPlan";
+import {
+  FaTrash,
+  FaCalendarWeek,
+  FaUtensils,
+  FaTimesCircle,
+} from "react-icons/fa";
 
 const WeeklyMealPlan = () => {
   const { state, dispatch } = useMealPlan();
@@ -7,25 +13,32 @@ const WeeklyMealPlan = () => {
 
   const handleClearWeek = () => {
     Swal.fire({
-      title: "Clear entire week?",
-      text: "All meals for the whole week will be removed!",
+      title: "<span class='text-gray-800'>Clear Entire Week?</span>",
+      html: "<p class='text-gray-500'>This will remove <b>all meals</b> from your schedule. This action cannot be undone!</p>",
       icon: "warning",
+      iconColor: "#ef4444",
       showCancelButton: true,
-      confirmButtonColor: "#dc2626", // red
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, clear week",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#e5e7eb",
+      confirmButtonText: "Yes, Clear All",
+      cancelButtonText: "<span class='text-gray-600 font-bold'>Cancel</span>",
+      buttonsStyling: true,
+      customClass: {
+        popup: "rounded-3xl shadow-2xl",
+        confirmButton: "px-6 py-2.5 rounded-xl font-bold shadow-lg",
+        cancelButton:
+          "px-6 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch({ type: "CLEAR_WEEK" });
-
         Swal.fire({
           icon: "success",
           title: "Week Cleared!",
-          text: "All meals for the week have been removed.",
+          text: "Start fresh! Your weekly plan is now empty.",
           timer: 1500,
           showConfirmButton: false,
+          iconColor: "#ef4444",
         });
       }
     });
@@ -33,28 +46,31 @@ const WeeklyMealPlan = () => {
 
   const handleClearDay = (day) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: `All meals for ${day.toUpperCase()} will be removed!`,
+      title: `<span class='text-gray-800'>Clear ${day.toUpperCase()}?</span>`,
+      text: "All meals for this day will be removed.",
       icon: "warning",
+      iconColor: "#f97316",
       showCancelButton: true,
       confirmButtonColor: "#f97316",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, clear it!",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
+      cancelButtonColor: "#e5e7eb",
+      confirmButtonText: "Yes, Clear Day",
+      cancelButtonText: "<span class='text-gray-600 font-bold'>Cancel</span>",
+      customClass: {
+        popup: "rounded-3xl",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch({
           type: "CLEAR_DAY_MEALS",
           payload: { day },
         });
-
         Swal.fire({
           icon: "success",
           title: "Cleared!",
-          text: `All meals for ${day.toUpperCase()} have been removed.`,
+          text: `${day.toUpperCase()} is now empty.`,
           timer: 1500,
           showConfirmButton: false,
+          iconColor: "#f97316",
         });
       }
     });
@@ -62,84 +78,149 @@ const WeeklyMealPlan = () => {
 
   const handleRemoveMeal = (day, mealId, mealName) => {
     Swal.fire({
-      title: "Remove this meal?",
-      text: `Do you want to remove "${mealName}" from ${day.toUpperCase()}?`,
+      title: "<span class='text-sm text-gray-600'>Remove Item</span>",
+      html: `<h3 class='text-xl font-bold text-gray-800'>${mealName}</h3>`,
       icon: "question",
+      iconColor: "#fbbf24",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444", // red
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, remove",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#e5e7eb",
+      confirmButtonText: "Remove",
+      cancelButtonText: "<span class='text-gray-600'>Keep it</span>",
+      customClass: {
+        popup: "rounded-3xl w-80",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch({
           type: "REMOVE_MEAL",
-          payload: {
-            day,
-            mealId,
-          },
+          payload: { day, mealId },
         });
-
         Swal.fire({
           icon: "success",
           title: "Removed!",
-          text: `"${mealName}" has been removed.`,
-          timer: 1200,
+          timer: 1000,
           showConfirmButton: false,
+          iconColor: "#ef4444",
         });
       }
     });
   };
 
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Weekly Meal Plan</h2>
+  const hasMeals = Object.values(mealPlan).some((meals) => meals.length > 0);
 
-        <button
-          onClick={handleClearWeek}
-          className="text-sm bg-red-500 text-white px-3 py-1 rounded"
-        >
-          Clear Week
-        </button>
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gray-50/50">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div className="flex items-center gap-4">
+          <div className="bg-orange-100 p-3 rounded-full text-orange-600">
+            <FaCalendarWeek className="text-2xl" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+              Weekly Meal Plan
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Organize your nutrition for the week ahead.
+            </p>
+          </div>
+        </div>
+
+        {hasMeals && (
+          <button
+            onClick={handleClearWeek}
+            className="group flex items-center gap-2 bg-red-50 text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow-red-200"
+          >
+            <FaTrash className="text-sm group-hover:animate-bounce" />
+            Clear Entire Week
+          </button>
+        )}
       </div>
 
-      {Object.entries(mealPlan).map(([day, meals]) => (
-        <div key={day} className="border p-3 mb-3 rounded">
-          <div className="flex justify-between items-center mb-2">
-            <strong className="uppercase">{day}</strong>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {Object.entries(mealPlan).map(([day, meals]) => (
+          <div
+            key={day}
+            className={`flex flex-col h-full rounded-3xl transition-all duration-300 border ${
+              meals.length > 0
+                ? "bg-white border-orange-100 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                : "bg-gray-50 border-gray-200 border-dashed opacity-80 hover:opacity-100"
+            }`}
+          >
+            <div
+              className={`p-5 flex justify-between items-center border-b ${
+                meals.length > 0
+                  ? "border-orange-50 bg-orange-50/50"
+                  : "border-gray-200"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-2 h-8 rounded-full ${
+                    meals.length > 0 ? "bg-orange-500" : "bg-gray-300"
+                  }`}
+                ></span>
+                <strong className="text-lg font-black text-gray-700 uppercase tracking-wider">
+                  {day}
+                </strong>
+              </div>
 
-            {meals.length > 0 && (
-              <button
-                onClick={() => handleClearDay(day)}
-                className="text-sm text-red-500"
-              >
-                Clear Day
-              </button>
-            )}
+              {meals.length > 0 && (
+                <button
+                  onClick={() => handleClearDay(day)}
+                  className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all"
+                  title="Clear Day"
+                >
+                  <FaTimesCircle className="text-lg" />
+                </button>
+              )}
+            </div>
+
+            <div className="p-4 flex-1">
+              {meals.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-gray-400 py-8 gap-2">
+                  <FaUtensils className="text-2xl opacity-20" />
+                  <span className="text-sm font-medium">No meals planned</span>
+                </div>
+              ) : (
+                <ul className="space-y-3">
+                  {meals.map((meal) => (
+                    <li
+                      key={meal.id}
+                      className="group/item relative flex items-center gap-3 p-2 bg-white rounded-xl border border-gray-100 shadow-sm hover:border-orange-200 hover:shadow-md transition-all duration-300"
+                    >
+                      <img
+                        src={meal.thumb}
+                        alt={meal.name}
+                        className="w-12 h-12 rounded-lg object-cover shadow-sm group-hover/item:scale-105 transition-transform"
+                      />
+
+                      <div className="flex-1 min-w-0 pr-6">
+                        <p className="font-bold text-gray-800 text-sm truncate">
+                          {meal.name}
+                        </p>
+                        <p className="text-xs text-orange-500 font-semibold uppercase">
+                          {meal.category}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          handleRemoveMeal(day, meal.id, meal.name)
+                        }
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover/item:opacity-100 transition-all duration-200"
+                        title="Remove Meal"
+                      >
+                        <FaTrash className="text-sm" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-
-          {meals.length === 0 ? (
-            <p className="text-gray-500">No meals planned</p>
-          ) : (
-            <ul className="space-y-2">
-              {meals.map((meal) => (
-                <li key={meal.id} className="flex justify-between items-center">
-                  <span>{meal.name}</span>
-
-                  <button
-                    onClick={() => handleRemoveMeal(day, meal.id, meal.name)}
-                    className="text-sm text-red-400"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

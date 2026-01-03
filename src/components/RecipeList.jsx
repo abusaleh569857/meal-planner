@@ -8,7 +8,7 @@ const RecipeList = ({ recipes }) => {
           Delicious Recipes
         </h2>
         <p className="text-gray-600 font-small text-sm md:text-lg max-w-xs md:text-right hover:text-orange-500 transition-colors duration-300 cursor-default">
-          Find your next favorite dish.
+          Find your next favourite dish.
         </p>
       </div>
 
