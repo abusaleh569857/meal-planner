@@ -8,8 +8,11 @@ const ParseMeal = (recipeData) => {
   const instruction = recipeData.strInstructions;
 
   const ingredients = [];
+  const ingredientsLength = Object.keys(recipeData).filter((key) =>
+    key.startsWith("strIngredient")
+  ).length;
 
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= ingredientsLength; i++) {
     const ing = recipeData[`strIngredient${i}`];
     const measure = recipeData[`strMeasure${i}`];
 
@@ -17,7 +20,6 @@ const ParseMeal = (recipeData) => {
       ingredients.push({ name: ing.trim(), measure: measure.trim() });
     }
   }
-
 
   return {
     id,
