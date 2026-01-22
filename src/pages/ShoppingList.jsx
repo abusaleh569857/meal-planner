@@ -41,20 +41,29 @@ const ShoppingList = () => {
       setError(null);
 
       try {
-        const requests = recipeIds.map((id) =>
-          fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
-            .then((res) => res.json())
-            .then((data) => ParseMeal(data.meals[0]))
-        );
+        const requests = recipeIds.map(async (id) => {
+          const res = await fetch(
+            `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
+          );
+          if (!res.ok) throw new Error("Failed to fetch data!");
+          const data = await res.json();
+          if (!data.meals || data.meals.length === 0)
+            throw new Error("No Meal Found");
+          return ParseMeal(data.meals[0]);
+        });
 
-        const recipes = await Promise.all(requests);
+        const allRecipes = await Promise.allSettled(requests);
+
+        const recipes = allRecipes
+          .filter((r) => r.status === "fulfilled")
+          .map((r) => r.value);
 
         const savedStatusRaw = localStorage.getItem(PURCHASED_STATUS_KEY);
         const savedStatus = savedStatusRaw ? JSON.parse(savedStatusRaw) : {};
 
         const ingredientMap = {};
 
-        recipes.forEach((recipe) => {
+        recipes?.forEach((recipe) => {
           recipe.ingredients.forEach(({ name, measure }) => {
             const key = name.trim();
 
@@ -74,7 +83,6 @@ const ShoppingList = () => {
         setIngredients(Object.values(ingredientMap));
       } catch (err) {
         setError("Failed to sync shopping list.");
-        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -86,7 +94,7 @@ const ShoppingList = () => {
   const togglePurchased = (name) => {
     setIngredients((prev) => {
       const updatedList = prev.map((item) =>
-        item.name === name ? { ...item, purchased: !item.purchased } : item
+        item.name === name ? { ...item, purchased: !item.purchased } : item,
       );
 
       const statusMap = updatedList.reduce((acc, item) => {
