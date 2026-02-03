@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import useCategory from "../hooks/useCategory";
 import heroImg from "../assets/hero.png";
 import { FaSearch, FaUtensils, FaChevronDown } from "react-icons/fa";
+import LoadingSpinner from "./LoadingSpinner";
 
 const SearchBar = ({ search, setSearch, category, setCategory }) => {
-  const { categories } = useCategory();
+  const { categories, loading, error } = useCategory();
   const [searchInput, setSearchInput] = useState("");
   const resultsRef = useRef(null);
 
@@ -35,8 +36,12 @@ const SearchBar = ({ search, setSearch, category, setCategory }) => {
     scrollToResults();
   };
 
+  if (loading) {
+    return <LoadingSpinner></LoadingSpinner>;
+  }
+
   return (
-    <div className="w-full pb-20">
+    <div className="w-full pb-5 md:pb-15">
       <div className="relative w-full h-[350px] md:h-[450px] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 hover:scale-105"
@@ -105,55 +110,63 @@ const SearchBar = ({ search, setSearch, category, setCategory }) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 border-l-4 border-orange-500 pl-4">
-            Browse by Category
-          </h2>
-
-          <div className="relative group min-w-[200px]">
-            <select
-              value={category}
-              onChange={(e) => handleCategorySelect(e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2.5 pl-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer shadow-sm hover:border-orange-400 transition-all font-medium"
-            >
-              <option value="All">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-              <FaChevronDown className="text-sm group-hover:text-orange-500 transition-colors" />
-            </div>
-          </div>
+      {error ? (
+        <div className="flex justify-center items-center">
+          <h1 className="text-lg md:text-3xl text-orange-500 font-bold">
+            {error}
+          </h1>
         </div>
+      ) : (
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 border-l-4 border-orange-500 pl-4">
+              Browse by Category
+            </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              onClick={() => handleCategorySelect(cat.name)}
-              className="group relative h-40 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
-            >
-              <img
-                src={cat.thumbnail}
-                alt={cat.name}
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-              />
-
-              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-
-              <div className="absolute bottom-0 left-0 w-full p-3">
-                <h3 className="text-white font-bold text-lg tracking-wide group-hover:text-orange-300 transition-colors">
-                  {cat.name}
-                </h3>
+            <div className="relative group min-w-[200px]">
+              <select
+                value={category}
+                onChange={(e) => handleCategorySelect(e.target.value)}
+                className="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2.5 pl-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer shadow-sm hover:border-orange-400 transition-all font-medium"
+              >
+                <option value="All">All Categories</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <FaChevronDown className="text-sm group-hover:text-orange-500 transition-colors" />
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                onClick={() => handleCategorySelect(cat.name)}
+                className="group relative h-40 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+              >
+                <img
+                  src={cat.thumbnail}
+                  alt={cat.name}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                />
+
+                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                <div className="absolute bottom-0 left-0 w-full p-3">
+                  <h3 className="text-white font-bold text-lg tracking-wide group-hover:text-orange-300 transition-colors">
+                    {cat.name}
+                  </h3>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       <div ref={resultsRef} />
     </div>
   );
