@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getAllCategories } from "../api/mealdb.api";
 
 const CACHE_KEY = "mealdb_categories";
 
@@ -23,13 +24,7 @@ const useCategory = () => {
           return;
         }
 
-        const res = await fetch(
-          "https://www.themealdb.com/api/json/v1/1/categories.php"
-        );
-
-        if (!res.ok) throw new Error("Error : Could Not Fetch Category Data!");
-
-        const data = await res.json();
+        const data = await getAllCategories();
         const list =
           data.categories?.map((cat) => ({
             id: cat.idCategory,
