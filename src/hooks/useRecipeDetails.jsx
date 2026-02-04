@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ParseMeal from "../utils/ParseMeal";
+import { getRecipeDetails } from "../api/mealdb.api";
 
 const useRecipeDetails = (id) => {
   const [recipeDetails, setRecipedetails] = useState({});
@@ -16,13 +17,8 @@ const useRecipeDetails = (id) => {
       setError(null);
 
       try {
-        const res = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-        );
+        const data = await getRecipeDetails(id);
 
-        if (!res.ok) throw new Error("Could not fetch recipe details!");
-
-        const data = await res.json();
         const recipeDetailsData = data?.meals?.[0] || null;
 
         if (recipeDetailsData) {
