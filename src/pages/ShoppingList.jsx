@@ -8,6 +8,7 @@ import {
   FaListAlt,
   FaCheckDouble,
 } from "react-icons/fa";
+import { getRecipeDetails } from "../api/mealdb.api";
 
 const PURCHASED_STATUS_KEY = "shopping_purchased_status_v2";
 
@@ -42,11 +43,7 @@ const ShoppingList = () => {
 
       try {
         const requests = recipeIds.map(async (id) => {
-          const res = await fetch(
-            `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
-          );
-          if (!res.ok) throw new Error("Failed to fetch data!");
-          const data = await res.json();
+          const data = await getRecipeDetails(id);
           if (!data.meals || data.meals.length === 0)
             throw new Error("No Meal Found");
           return ParseMeal(data.meals[0]);

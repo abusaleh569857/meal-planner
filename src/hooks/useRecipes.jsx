@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ParseMeal from "../utils/ParseMeal";
+import { filterByCategory, getSearchResult } from "../api/mealdb.api";
 
 const useRecipes = (searchQuery, category) => {
   const [recipes, setRecipes] = useState([]);
@@ -14,24 +15,14 @@ const useRecipes = (searchQuery, category) => {
       setError(null);
 
       try {
-        let url = "";
         let isCategorySearch = false;
-
+        let data = [];
         if (category && category !== "All") {
-          url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
-            category
-          )}`;
+          data = await filterByCategory(category);
           isCategorySearch = true;
         } else {
-          url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
-            searchQuery || ""
-          )}`;
+          data = await getSearchResult(searchQuery);
         }
-
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Could not fetch recipe data!");
-
-        const data = await res.json();
         let recipeData = data?.meals || [];
 
         if (isCategorySearch) {
